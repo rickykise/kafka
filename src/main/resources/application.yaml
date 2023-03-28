@@ -1,0 +1,88 @@
+.env:
+  directory: ./
+  filename: .env
+  prefix: ''
+
+server:
+  port: ${SERVER_PORT}
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/wes?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      connection-timeout: 3000
+      minimum-idle: 2
+      maximum-pool-size: 5
+      connection-test-query: SELECT 1
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    database: mysql
+    hibernate:
+      ddl-auto: none
+      naming:
+        pysical-starategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        format_sql: true
+  kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_BROKERS}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      bootstrap-servers: ${KAFKA_BROKERS}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      vendor:
+        topic: ${KAFKA_CONSUMER_VENDOR_TOPIC}
+        group-id: ${KAFKA_CONSUMER_VENDOR_GROUP_ID}
+        auto-offset-reset: ${KAFKA_CONSUMER_VENDOR_AUTO_OFFSET_RESET}
+        ack-mode: ${KAFKA_CONSUMER_VENDOR_ACK_MODE}
+        poll-time-out: ${KAFKA_CONSUMER_VENDOR_POLL_TIME_OUT}
+        concurrency: ${KAFKA_CONSUMER_VENDOR_CONCURRENCY}
+        acknowledgment-nack: ${KAFKA_CONSUMER_VENDOR_ACKNOWLEDGEMENT_NACK}
+      YI21:
+        topic: ${KAFKA_CONSUMER_YI21_TOPIC}
+        group-id: ${KAFKA_CONSUMER_YI21_GROUP_ID}
+        auto-offset-reset: ${KAFKA_CONSUMER_YI21_AUTO_OFFSET_RESET}
+        ack-mode: ${KAFKA_CONSUMER_YI21_ACK_MODE}
+        poll-time-out: ${KAFKA_CONSUMER_YI21_POLL_TIME_OUT}
+        concurrency: ${KAFKA_CONSUMER_YI21_CONCURRENCY}
+        acknowledgment-nack: ${KAFKA_CONSUMER_YI21_ACKNOWLEDGEMENT_NACK}
+      dead-letter:
+        topic: ${KAFKA_CONSUMER_DEAD_LETTER_TOPIC}
+        group-id: ${KAFKA_CONSUMER_DEAD_LETTER_GROUP_ID}
+        auto-offset-reset: ${KAFKA_CONSUMER_YI21_AUTO_OFFSET_RESET}
+        ack-mode: ${KAFKA_CONSUMER_YI21_ACK_MODE}
+        poll-time-out: ${KAFKA_CONSUMER_YI21_POLL_TIME_OUT}
+        concurrency: ${KAFKA_CONSUMER_YI21_CONCURRENCY}
+        acknowledgment-nack: ${KAFKA_CONSUMER_YI21_ACKNOWLEDGEMENT_NACK}
+
+management:
+  server:
+    port: ${SERVER_PORT}
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      enabled: true
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true

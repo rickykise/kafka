@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <!-- 트랜잭션 로그 보기 -->
+    <logger name="org.hibernate.transaction.JDBCTransaction" level="DEBUG"/>
+    <logger name="org.hibernate.jdbc.ConnectionManager" level="DEBUG"/>
+    <logger name="org.springframework.orm.jpa.JpaTransactionManager" level="DEBUG"/>
+
+    <springProperty name="active-profiles" source="spring.profiles.active" />
+    <springProperty name="max-history" source="product.log.max-history" />
+
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:- [%d{yyyy-MM-dd HH:mm:ss.SSS}] [%X{x-request-id}] [%-5level] [%logger.%method:line-%line] - %msg%n}"/>
+    <property name="CONSOLE_LOG_CHARSET" value="${CONSOLE_LOG_CHARSET:-default}"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${filePath}/${fileName}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${filePath}/app.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1GB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${max-history}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <appender name="LOG_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${errorFilePath}/${errorFileName}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${errorFilePath}/error.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1GB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${max-history}</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <logger name="ai.fassto.kafka" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <root level="ERROR">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
