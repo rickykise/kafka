@@ -1,6 +1,6 @@
 
 ---
-# TOPIC Message 요청 형식1
+# TOPIC Message 요청 형식
 
 ### Topic
 - 네이밍 규칙 아직 미정.
